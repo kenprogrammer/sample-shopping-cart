@@ -19,6 +19,8 @@ Route::post('/add-to-cart','StoreFrontController@addTocart');
 Route::get('/view-cart','StoreFrontController@viewCart');
 Route::get('/checkout','StoreFrontController@checkout');
 Route::post('/checkout','StoreFrontController@placeOrder');
+Route::post('/pay', 'RaveController@initialize')->name('pay');
+Route::post('/rave/callback', 'RaveController@callback')->name('callback');
 
 Auth::routes();
 

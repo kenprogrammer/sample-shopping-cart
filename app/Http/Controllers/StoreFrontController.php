@@ -88,8 +88,21 @@ class StoreFrontController extends Controller
     */
     public function placeOrder(Request $request)
     {
+        $first_name=$request->input('first_name');
+        $last_name=$request->input('last_name');
+        $phone_no=$request->input('phone_no');
+        $email=$request->input('email');
+        $order_total=Cart::sum('subtotal');
         $payment_method=$request->input('payment_method');
 
-        dd($payment_method);
+        //NOTE: Get country from Geo IP,currency use the store/order currency
+        if($payment_method=='Rave Laravel')
+        {
+            return view('frontend.rave')->with('order_total',$order_total)
+                                        ->with('first_name',$first_name)
+                                        ->with('last_name',$last_name)
+                                        ->with('phone_no',$phone_no)
+                                        ->with('email',$email);
+        }
     }
 }

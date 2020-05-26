@@ -51,11 +51,25 @@
         <div class="col-sm-3">    
             <form name="checkout" method="post" action="/checkout">
                 @csrf
-                <div class="radio">
-                    <label><input type="radio" name="payment_method" value="Option 1" checked>Option 1</label>
+                <div class="form-group">
+                    <label>First Name:</label>
+                    <input type="text" class="form-control" name="first_name" value="">
                 </div>
+                <div class="form-group">
+                    <label>Last Name:</label>
+                    <input type="text" class="form-control" name="last_name" value="">
+                </div>
+                <div class="form-group">
+                    <label>Phone No:</label>
+                    <input type="text" class="form-control" name="phone_no" value="">
+                </div>
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="text" class="form-control" name="email" value="">
+                </div>  
+                <label>Choose Payment Method:</label>
                 <div class="radio">
-                    <label><input type="radio" name="payment_method" value="Option 2">Option 2</label>
+                    <label><input type="radio" name="payment_method" required value="Rave Laravel" checked>Rave (Laravel Package)</label>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">Place Order</button>

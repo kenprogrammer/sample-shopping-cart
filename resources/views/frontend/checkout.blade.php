@@ -71,6 +71,9 @@
                 <div class="radio">
                     <label><input type="radio" name="payment_method" required value="Rave Laravel" checked>Rave (Laravel Package)</label>
                 </div>
+                <div class="radio">
+                    <label><input type="radio" name="payment_method" required value="Rave Standard">Rave (Standard)</label>
+                </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-success">Place Order</button>
                 </div>    

@@ -96,13 +96,74 @@ class StoreFrontController extends Controller
         $payment_method=$request->input('payment_method');
 
         //NOTE: Get country from Geo IP,currency use the store/order currency
-        if($payment_method=='Rave Laravel')
-        {
+        if($payment_method=='Rave Laravel'){
+
             return view('frontend.rave')->with('order_total',$order_total)
                                         ->with('first_name',$first_name)
                                         ->with('last_name',$last_name)
                                         ->with('phone_no',$phone_no)
                                         ->with('email',$email);
+
+        }elseif($payment_method=='Rave Standard'){
+
+            $rave_url=$this->initStandardRavePayment($email,$order_total);
+            
+            //redirect to page so User can pay
+            return redirect()->away($rave_url);
+
         }
+    }
+
+    /*
+    * Intialize Rave Standard Payment
+    */
+    public function initStandardRavePayment($email,$amount)
+    {
+        $curl = curl_init();
+
+        $customer_email = $email;
+        $amount = $amount;  
+        $currency = "KES";
+        $txref = "rave-1399338383"; // ensure you generate unique references per transaction.
+        $PBFPubKey = \Config('rave.publicKey'); // get your public key from the dashboard.
+        $redirect_url = "http://localhost:8000/rave/standard/callback";
+        $payment_plan = ""; // this is only required for recurring payments.
+
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/hosted/pay",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => json_encode([
+            'amount'=>$amount,
+            'customer_email'=>$customer_email,
+            'currency'=>$currency,
+            'txref'=>$txref,
+            'PBFPubKey'=>$PBFPubKey,
+            'redirect_url'=>$redirect_url,
+            'payment_plan'=>$payment_plan
+        ]),
+        CURLOPT_HTTPHEADER => [
+            "content-type: application/json",
+            "cache-control: no-cache"
+        ],
+        ));
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+        
+        if($err){
+            // there was an error contacting the rave API
+            \Log::error('Curl returned error: ' . $err);
+        }
+
+        $transaction = json_decode($response);
+        
+        if(!$transaction->data && !$transaction->data->link){
+            // there was an error from the API
+            \Log::error('API returned error: ' . $transaction->message);
+        }
+
+        return $transaction->data->link;
     }
 }

@@ -21,6 +21,7 @@ Route::get('/checkout','StoreFrontController@checkout');
 Route::post('/checkout','StoreFrontController@placeOrder');
 Route::post('/pay', 'RaveController@initialize')->name('pay');
 Route::post('/rave/callback', 'RaveController@callback')->name('callback');
+Route::post('/rave/standard/callback', 'RaveStandardController@callback')->name('standard.callback');
 
 Auth::routes();
 

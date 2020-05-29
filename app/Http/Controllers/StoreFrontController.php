@@ -124,7 +124,7 @@ class StoreFrontController extends Controller
         $customer_email = $email;
         $amount = $amount;  
         $currency = "KES";
-        $txref = "rave-1399338383"; // ensure you generate unique references per transaction.
+        $txref = "rave-".$this->generaterandomNumbers(10); // ensure you generate unique references per transaction.
         $PBFPubKey = \Config('rave.publicKey'); // get your public key from the dashboard.
         $redirect_url = "http://localhost:8000/rave/standard/callback";
         $payment_plan = ""; // this is only required for recurring payments.
@@ -165,5 +165,35 @@ class StoreFrontController extends Controller
         }
 
         return $transaction->data->link;
+    }
+
+    /*
+        * Generate unique random string
+        *
+        * @return string
+        */
+    public function generaterandomNumbers($length) {
+
+        $chars = "023456789";
+
+        srand((double)microtime()*1000000);
+
+        $i = 0;
+
+        $randStr = '' ;
+
+        while ($i <= $length) {
+
+            $num = rand() % 33;
+
+            $tmp = substr($chars, $num, 1);
+
+            $randStr = $randStr . $tmp;
+
+            $i++;
+
+        }
+
+        return $randStr;
     }
 }
